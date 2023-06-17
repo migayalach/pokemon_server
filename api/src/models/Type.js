@@ -4,14 +4,18 @@ module.exports = (dataBase) => {
     "type",
     {
       id: {
-        type: DataTypes.INTEGER,
-        uautoIncrement: true,
+        type: DataTypes.UUID,
         unique: true,
         primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
       },
       nombre: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      creado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
     },
     {
