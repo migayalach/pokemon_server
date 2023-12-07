@@ -1,4 +1,10 @@
+import Login from "../Componets/login/page";
+
 const Home = () => {
-  return <>home</>;
-}
+  return (
+    <>
+      <Login />
+    </>
+  );
+};
 export default Home;
