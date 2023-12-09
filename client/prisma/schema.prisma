@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Level {
+  idLevel   Int    @id @default(autoincrement())
+  nameLevel String
+  users     User[]
+}
+
+model User {
+  idUser    Int        @id @default(autoincrement())
+  idLevel   Int
+  name      String
+  email     String     @unique
+  password  String     @default("")
+  level     Level      @relation(fields: [idLevel], references: [idLevel])
+  favorites Favorite[]
+}
+
+model Type {
+  idType   Int       @id @default(autoincrement())
+  name     String
+  create   Boolean   @default(false)
+  pokemons Pokemon[]
+}
+
+model Pokemon {
+  idPokemon Int        @id @default(autoincrement())
+  idType    Int?
+  name      String
+  life      String?
+  attack    String?
+  defense   String?
+  speed     String?
+  height    String
+  weight    String
+  create    Boolean    @default(false)
+  favorites Favorite[]
+  type      Type?      @relation(fields: [idType], references: [idType])
+}
+
+model Favorite {
+  idFavorite Int       @id @default(autoincrement())
+  users      User[]
+  pokemons   Pokemon[]
+}
