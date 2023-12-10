@@ -6,6 +6,7 @@ export const GET = () => {
   });
 };
 
+// https://pokeapi.co/api/v2/pokemon?offset=1188&limit=104
 export const POST = () => {
   return NextResponse.json({
     message: "POST pokemon",
