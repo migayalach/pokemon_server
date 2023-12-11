@@ -27,25 +27,31 @@ model User {
 }
 
 model Type {
-  idType   Int       @id @default(autoincrement())
+  idType   Int           @id @default(autoincrement())
   name     String
-  create   Boolean   @default(false)
-  pokemons Pokemon[]
+  pokemons PokemonType[]
 }
 
 model Pokemon {
-  idPokemon Int        @id @default(autoincrement())
-  idType    Int?
+  idPokemon Int           @id @default(autoincrement())
   name      String
-  life      String?
-  attack    String?
-  defense   String?
-  speed     String?
-  height    String
-  weight    String
-  create    Boolean    @default(false)
+  life      Int
+  attack    Int
+  defense   Int
+  speed     Int
+  height    Int
+  weight    Int
+  create    Boolean       @default(false)
   favorites Favorite[]
-  type      Type?      @relation(fields: [idType], references: [idType])
+  types     PokemonType[]
+}
+
+model PokemonType {
+  id        Int     @id @default(autoincrement())
+  idType    Int
+  idPokemon Int
+  type      Type    @relation(fields: [idType], references: [idType])
+  pokemon   Pokemon @relation(fields: [idPokemon], references: [idPokemon])
 }
 
 model Favorite {
