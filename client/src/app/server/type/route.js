@@ -17,7 +17,7 @@ export const POST = async (request) => {
   const countType = await prisma.type.count();
   if (!countType) {
     const createType = type.map((index) =>
-      prisma.type.create({ data: { name: index, create: true } })
+      prisma.type.create({ data: { name: index } })
     );
     const response = await Promise.all(createType);
     return NextResponse.json({
