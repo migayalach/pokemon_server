@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 
-export const GET = () => {
+export const GET = async () => {
   return NextResponse.json({
     message: "GET pokemon",
   });
 };
 
-// https://pokeapi.co/api/v2/pokemon?offset=1188&limit=104
 export const POST = () => {
   return NextResponse.json({
     message: "POST pokemon",
