@@ -23,3 +23,39 @@ export const DELETE = () => {
     message: "DELETE pokemon",
   });
 };
+
+
+
+// export const POST = async (request) => {
+//   const { name, height, weight, life, attack, defense, speed, types } =
+//       await request.json();
+//     const newPoke = await prisma.pokemon.create({
+//       data: {
+//         name,
+//         height,
+//         weight,
+//         life,
+//         attack,
+//         defense,
+//         speed,
+//       },
+//     });
+  
+//     const typesPromise = types.map((typeId) => {
+//       return prisma.pokemonType.create({
+//         data: {
+//           idPokemon: newPoke.idPokemon,
+//           idType: typeId,
+//         },
+//       });
+//     });
+  
+//     await Promise.all(typesPromise);
+  
+//     return NextResponse.json({
+//       create: false,
+//       message: `La base de datos ya tiene pokemon guardados desde la  API`,
+//       newPoke,
+//     });
+//   };
+  
