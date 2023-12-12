@@ -1,11 +1,28 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/utils/prisma";
+const {
+  clearResponsePokemon,
+  selectDataPokemon,
+} = require("@/utils/functions");
 
-// eliminar solo los creados
-// mostrat por id
-export const GET = (request, { params }) => {
+export const GET = async (request, { params }) => {
+  const searchPokemonId = await prisma.pokemon.findUnique({
+    where: {
+      idPokemon: +params.idPokemon,
+    },
+    select: selectDataPokemon(),
+  });
+  if (!searchPokemonId) {
+    return NextResponse.json({
+      pokemonSearch: false,
+      message: "No se pudo encontrar el pokemon que busca",
+    });
+  }
+
   return NextResponse.json({
+    pokemonSearch: true,
     message: "GET pokemon",
+    pokemon: clearResponsePokemon([searchPokemonId]),
   });
 };
 
