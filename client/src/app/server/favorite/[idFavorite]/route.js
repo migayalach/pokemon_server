@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/utils/prisma";
 
-export const GET = () => {
+// llega el id del usuario y muestra todos sus fav
+export const GET = (request, { params }) => {
+  const favoriteUser = prisma.favorite.findMany({
+    where: {
+      idUser: +params.idUser,
+    },
+  });
   return NextResponse.json({
     message: "GET FAVORITE",
   });
@@ -9,12 +16,6 @@ export const GET = () => {
 export const POST = () => {
   return NextResponse.json({
     message: "POST FAVORITE",
-  });
-};
-
-export const PUT = () => {
-  return NextResponse.json({
-    message: "PUT FAVORITE",
   });
 };
 
