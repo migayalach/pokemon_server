@@ -71,26 +71,42 @@ export const GET = async () => {
 export const POST = async (request) => {
   const { pokemon } = await request.json();
   const countPokemon = await prisma.pokemon.count();
-  if (!countPokemon) {
-    const createPokemon = pokemon.map(
-      ({ name, height, weight, life, attack, defense, speed, types }) =>
-        prisma.pokemon.create({
-          data: { name, height, weight, life, attack, defense, speed },
-        })
-    );
-    const response = await Promise.all(createPokemon);
-
-    // const x = pokemon.map(({ types }) => console.log(types));
-    const y = (response.map(({ idPokemon, types }) => console.log(idPokemon, types)));
-
+  if (countPokemon) {
     return NextResponse.json({
-      create: true,
-      message: "Se agregaron con exito los pokemon",
-      response,
+      create: false,
+      message: `La base de datos ya tiene pokemon guardados desde la API`,
     });
   }
+  const promisePokemon = pokemon.map(
+    async ({ name, height, weight, life, attack, defense, speed, types }) => {
+      const newPokemon = await prisma.pokemon.create({
+        data: {
+          name,
+          height,
+          weight,
+          life,
+          attack,
+          defense,
+          speed,
+        },
+      });
+
+      const typePromises = types.map(async (typeId) => {
+        await prisma.pokemonType.create({
+          data: {
+            idPokemon: newPokemon.idPokemon,
+            idType: typeId,
+          },
+        });
+      });
+      await Promise.all(typePromises);
+    }
+  );
+
+  await Promise.all(promisePokemon);
+
   return NextResponse.json({
-    create: false,
-    message: `La base de datos ya tiene pokemon guardados desde la  API`,
+    create: true,
+    message: `Se agrego a la base de datos pokemon's desde la  API`,
   });
 };
