@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/utils/prisma";
 const { selectDataPokemon, responseGetPokemon } = require("@/utils/functions");
-//editar solo los creados
-//delete solo los creados
 
 export const GET = async (request) => {
   const searchParams = new URLSearchParams(request.url.split("?")[1]);
@@ -48,7 +46,7 @@ export const POST = async (request) => {
   if (!countPokemon) {
     return NextResponse.json({
       pokemon: false,
-      message: `Lo siento si aun no hay datos de pokemon guardados desde la api no se puede agregar nuevos pokemon´s pongase en contacto con el administrador`,
+      message: `Lo siento si aun no hay datos de pokemon guardados desde la api no se puede agregar nuevos pokemon's pongase en contacto con el administrador`,
     });
   }
   const duplicateName = await prisma.pokemon.findFirst({
@@ -94,14 +92,100 @@ export const POST = async (request) => {
   });
 };
 
-export const PUT = () => {
-  return NextResponse.json({
-    message: "PUT pokemon",
+export const PUT = async (request) => {
+  const {
+    idPokemon,
+    name,
+    height,
+    weight,
+    life,
+    attack,
+    defense,
+    speed,
+    types,
+  } = await request.json();
+  const pokemonExist = await prisma.pokemon.findUnique({
+    where: {
+      idPokemon: +idPokemon,
+    },
   });
-};
 
-export const DELETE = () => {
+  if (!pokemonExist) {
+    return NextResponse.json({
+      pokemonUpdate: false,
+      message: `El pokemon que intenta editar, no existe`,
+    });
+  }
+  const pokemonCreate = await prisma.pokemon.findMany({
+    where: {
+      idPokemon: +idPokemon,
+    },
+    select: {
+      create: true,
+    },
+  });
+  if (!pokemonCreate[0].create) {
+    return NextResponse.json({
+      pokemonUpdate: false,
+      message: `El pokemon que intenta editar, pertenece a la API`,
+    });
+  }
+
+  const existTypes = types.map((idType) => {
+    return prisma.type.findFirst({
+      where: {
+        idType: +idType,
+      },
+    });
+  });
+
+  const existTypeResponse = await Promise.all(existTypes);
+  const auxTypeExist = existTypeResponse.includes(null);
+  if (auxTypeExist) {
+    return NextResponse.json({
+      pokemonUpdate: false,
+      message: `El tipo de pokemon al cual intenta cambiar no existe`,
+    });
+  }
+
+  const editPokemon = await prisma.pokemon.update({
+    where: {
+      idPokemon: +idPokemon,
+    },
+    data: {
+      name,
+      height,
+      weight,
+      life,
+      attack,
+      defense,
+      speed,
+    },
+  });
+
+  await prisma.pokemonType.deleteMany({
+    where: {
+      idPokemon: +idPokemon,
+    },
+  });
+
+  const createTypePokemon = types.map((idType) => {
+    return prisma.pokemonType.create({
+      data: {
+        idPokemon: +idPokemon,
+        idType,
+      },
+    });
+  });
+
+  await Promise.all(createTypePokemon);
+
   return NextResponse.json({
-    message: "DELETE pokemon",
+    pokemonUpdate: true,
+    message: "PUT pokemon",
+    pokemon: {
+      ...editPokemon,
+      types: existTypeResponse.map(({ idType }) => idType),
+    },
   });
 };
