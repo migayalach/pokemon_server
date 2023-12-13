@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/utils/prisma";
-const {
-  selectDataPokemon,
-  clearResponsePokemon,
-} = require("@/utils/functions");
+const { selectDataPokemon } = require("@/utils/functions");
 
 export const GET = async (request, { params }) => {
   const favoriteUser = await prisma.favorite.findMany({
@@ -30,17 +27,72 @@ export const GET = async (request, { params }) => {
       })
     );
   const pokemonResponse = await Promise.all(pokemon);
-  const obj = {
-    idUser: favoriteUser[0].idUser,
-    idFavorite: favoriteUser[0].idFavorite,
-    pokemon: clearResponsePokemon(pokemonResponse),
+
+  const favoritePokemon = favoriteUser.map(({ idFavorite }) => ({
+    idFavorite,
+  }));
+
+  const pokemonType = async (types) => {
+    const typePromise = types.map(async (idType) => {
+      const { name } = await prisma.type.findUnique({
+        where: {
+          idType,
+        },
+        select: {
+          name: true,
+        },
+      });
+      return name;
+    });
+    return await Promise.all(typePromise);
   };
+
+  const pokemonDataClear = await Promise.all(
+    pokemonResponse.map(
+      async (
+        {
+          idPokemon,
+          name,
+          height,
+          weight,
+          life,
+          attack,
+          defense,
+          speed,
+          create,
+          types,
+        },
+        index
+      ) => {
+        return {
+          idPokemon,
+          idFavorite: favoritePokemon[index]?.idFavorite,
+          name,
+          height,
+          weight,
+          life,
+          attack,
+          defense,
+          speed,
+          create,
+          types: await pokemonType(types.map(({ idType }) => idType)),
+        };
+      }
+    )
+  );
+
+  const objectResponse = {
+    idUser: favoriteUser[0].idUser,
+    pokemon: pokemonDataClear,
+  };
+
   return NextResponse.json(
     {
       searchFavorite: true,
       message: `Lista de favoritos`,
-      favoriteDataUser: obj,
+      favoriteUser: objectResponse,
     },
     { status: 200 }
   );
 };
+
