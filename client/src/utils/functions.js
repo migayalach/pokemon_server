@@ -64,6 +64,7 @@ const responseGetPokemon = (response, message, responseData) => ({
   dataResponse: clearResponsePokemon(responseData),
 });
 
+
 module.exports = {
   clearResponseUser,
   randomAtrributes,
