@@ -62,8 +62,47 @@ export const POST = async (request) => {
   });
 };
 
-export const DELETE = () => {
+export const DELETE = async (request, { params }) => {
+  const searchParams = new URLSearchParams(request.url.split("?")[1]);
+  const idUser = searchParams.get("idUser");
+  const idFavorite = searchParams.get("idFavorite");
+
+  const existUser = await prisma.user.findUnique({
+    where: {
+      idUser: +idUser,
+    },
+  });
+
+  if (!existUser) {
+    return NextResponse.json({
+      deleteFavorite: false,
+      message: `El usuario no existe`,
+    });
+  }
+
+  const existFavorite = await prisma.favorite.findUnique({
+    where: {
+      idUser: +idUser,
+      idFavorite: +idFavorite,
+    },
+  });
+
+  if (!existFavorite) {
+    return NextResponse.json({
+      deleteFavorite: false,
+      message: `No se pudo eliminar el favorito`,
+    });
+  }
+
+  await prisma.favorite.delete({
+    where: {
+      idUser: +idUser,
+      idFavorite: +idFavorite,
+    },
+  });
+
   return NextResponse.json({
-    message: "DELETE FAVORITE",
+    deleteFavorite: true,
+    message: "Favorito eliminado",
   });
 };
