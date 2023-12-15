@@ -13,7 +13,7 @@ const randomAtrributes = () => Math.floor(Math.random() * (100 - 60 + 1)) + 60;
 const clearTypeId = (array) =>
   array.map((index) => index.map(({ idType }) => idType)).flat();
 
-// FUNCIONES PARA POKEMON  
+// FUNCIONES PARA POKEMON
 const clearResponsePokemon = (arr) =>
   arr.map(
     ({
@@ -64,6 +64,12 @@ const responseGetPokemon = (response, message, responseData) => ({
   dataResponse: clearResponsePokemon(responseData),
 });
 
+const arrayClear = (array) => {
+  if (Array.isArray(array)) {
+    return array;
+  }
+  return [array];
+};
 
 module.exports = {
   clearResponseUser,
@@ -71,5 +77,5 @@ module.exports = {
   clearTypeId,
   selectDataPokemon,
   responseGetPokemon,
-  clearResponsePokemon
+  clearResponsePokemon,
 };
