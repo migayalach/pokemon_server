@@ -1,29 +1,24 @@
 // METODOS ELIMINAR, EDITAR Y BUSCAR POR ID
 import { NextResponse } from "next/server";
-import { prisma } from "@/utils/prisma";
-
-// COSAS A CONSIDERAR
-// - MANEJADOR DE ERRORES
-// - RESPUESTAS VACIAS
+import { getControllerLevelId, deleteLevel } from "../controllerLevel";
+const { responseErrorLevel } = require("@/utils/responseJson");
 
 export const GET = async (request, { params }) => {
-  const levelSearch = await prisma.level.findUnique({
-    where: {
-      idLevel: +params.idLevel,
-    },
-  });
-  return NextResponse.json({ level: true, levelSearch });
+  const idLevelParams = +params.idLevel;
+  try {
+    const dataGetLevel = await getControllerLevelId(idLevelParams);
+    return NextResponse.json(dataGetLevel);
+  } catch (error) {
+    return NextResponse.json(responseErrorLevel(error.message));
+  }
 };
 
 export const DELETE = async (request, { params }) => {
-  const deleteLevel = await prisma.level.delete({
-    where: {
-      idLevel: +params.idLevel,
-    },
-  });
-  return NextResponse.json({
-    message: "Level delete success",
-    levelDelete: true,
-    deleteLevel,
-  });
+  const idLevelParams = +params.idLevel;
+  try {
+    const levelDelete = await deleteLevel(idLevelParams);
+    return NextResponse.json(levelDelete);
+  } catch (error) {
+    return NextResponse.json(responseErrorLevel(error.message));
+  }
 };
