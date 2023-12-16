@@ -64,7 +64,7 @@ const responseGetPokemon = (response, message, responseData) => ({
   dataResponse: clearResponsePokemon(responseData),
 });
 
-const arrayClear = (array) => {
+const arrayResponse = (array) => {
   if (Array.isArray(array)) {
     return array;
   }
@@ -78,4 +78,5 @@ module.exports = {
   selectDataPokemon,
   responseGetPokemon,
   clearResponsePokemon,
+  arrayResponse
 };
