@@ -66,6 +66,13 @@ const responseErrorFavorite = (message) => ({
   dataFavorite: [],
 });
 
+// RESPONSE LOGIN USER
+const responseSuccessLogin = (message, data) => ({
+  access: true,
+  message,
+  data: arrayResponse(data),
+});
+
 module.exports = {
   responseSuccessLevel,
   responseErrorLevel,
@@ -77,4 +84,5 @@ module.exports = {
   responseErrorPokemon,
   responseSuccessFavorite,
   responseErrorFavorite,
+  responseSuccessLogin,
 };
