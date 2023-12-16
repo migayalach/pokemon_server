@@ -1,33 +1,33 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/utils/prisma";
+import { getTypeApi, createType } from "./controllerType";
+import { responseSuccessType, responseErrorType } from "@/utils/responseJson";
 const URL_TYPES = `https://pokeapi.co/api/v2/type`;
 
 export const GET = async () => {
-  const response = await fetch(URL_TYPES);
-  const type = (await response.json()).results.map(({ name }) => name);
-  return NextResponse.json({
-    types: true,
-    message: "Se obtuvo una lista con todos los tipos de pokemon",
-    type,
-  });
+  try {
+    const dataTypeApi = await getTypeApi(URL_TYPES);
+    return NextResponse.json(
+      responseSuccessType(
+        `Se obtuvo una lista con todos los tipos de pokemon`,
+        dataTypeApi
+      )
+    );
+  } catch (error) {
+    return NextResponse.json(responseErrorType(error.message));
+  }
 };
 
 export const POST = async (request) => {
   const { type } = await request.json();
-  const countType = await prisma.type.count();
-  if (!countType) {
-    const createType = type.map((index) =>
-      prisma.type.create({ data: { name: index } })
+  try {
+    const dataCreate = await createType(type);
+    return NextResponse.json(
+      responseSuccessType(
+        `Se agregaron con exito los typos de pokemon`,
+        dataCreate
+      )
     );
-    const response = await Promise.all(createType);
-    return NextResponse.json({
-      create: true,
-      message: "Se agregaron con exito los typos de pokemon",
-      response,
-    });
+  } catch (error) {
+    return NextResponse.json(responseErrorType(error.message));
   }
-  return NextResponse.json({
-    create: false,
-    message: `La base de datos ya tiene datos guardados`,
-  });
 };
