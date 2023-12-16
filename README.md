@@ -254,5 +254,5 @@ Ten en cuenta que en esta instancia no es obligatorio el desarrollo de testing p
 
 <br />
 
-<img src="./pokemon.png" alt="" />
+<img src="./pokemonAsh.png" alt="Ash y picachu" />
 # Pokemon

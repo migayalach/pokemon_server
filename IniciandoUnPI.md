@@ -1,5 +1,3 @@
-![HenryLogo](https://d31uz8lwfmyn8g.cloudfront.net/Assets/logo-henry-white-lg.png)
-
 # **GUÍA | ¿Cómo empezar un proyecto individual?**
 
 ### 🤓 Antes de comenzar, te recomendamos leer el [**README**](./README.md) y la Documentación de la API Externa para comprender la temática que debes desarrollar y lo que se considera como requisito obligatorio para estar en condiciones de presentar un PI.
