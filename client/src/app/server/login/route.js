@@ -1,53 +1,16 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/utils/prisma";
-import { clearResponseUser } from "@/utils/functions";
+import { loginUser } from "./controllerLogin";
+const { responseSuccessLogin } = require("@/utils/responseJson");
 
 export const POST = async (request) => {
   const { email, password } = await request.json();
-  const existEmail = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (!existEmail) {
+  try {
+    const { message, dataUser } = await loginUser(email, password);
+    return NextResponse.json(responseSuccessLogin(message, dataUser));
+  } catch (error) {
     return NextResponse.json({
-      login: false,
-      message: `El email: ${email}, no se encuentra registrado`,
+      access: false,
+      message: error.message,
     });
   }
-
-  const existPassword = await prisma.user.findUnique({
-    where: {
-      email,
-      password,
-    },
-  });
-
-  if (!existPassword) {
-    return NextResponse.json({
-      login: false,
-      message: `La contraseña: ${password}, no es correcta`,
-    });
-  }
-
-  const dataUser = await prisma.user.findUnique({
-    where: {
-      email,
-      password,
-    },
-    select: {
-      idUser: true,
-      idLevel: true,
-      name: true,
-      email: true,
-      level: true,
-    },
-  });
-  const [dataUserResponse] = clearResponseUser([dataUser]);
-
-  return NextResponse.json({
-    message: `Bienvenido ${dataUserResponse.name}`,
-    dataUser: dataUserResponse,
-  });
 };
