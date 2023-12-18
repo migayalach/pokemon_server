@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/prisma";
+import { pokemonType } from "../helpers";
 const { selectDataPokemon } = require("@/utils/functions");
 
 const createFavorite = async (idUser, idPokemon) => {
@@ -43,7 +44,7 @@ const createFavorite = async (idUser, idPokemon) => {
 
   return {
     ...existPokemon,
-    types: existPokemon.types.map(({ idType }) => idType),
+    types: await pokemonType(existPokemon.types.map(({ idType }) => idType)),
   };
 };
 
