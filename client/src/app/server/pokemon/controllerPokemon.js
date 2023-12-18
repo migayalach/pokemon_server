@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/prisma";
+import { pokemonType, pokemonReturnData } from "../helpers";
 const {
   selectDataPokemon,
   clearResponsePokemon,
@@ -16,7 +17,7 @@ const getPokemon = async (searchParams) => {
       },
       select: selectDataPokemon(),
     });
-    return clearResponsePokemon(searchName);
+    return await pokemonReturnData(clearResponsePokemon(searchName));
   } else if (searchParams.get("create")) {
     const createBoolean = searchParams.get("create") === "true";
     const pokemonCreate = await prisma.pokemon.findMany({
@@ -25,12 +26,12 @@ const getPokemon = async (searchParams) => {
       },
       select: selectDataPokemon(),
     });
-    return clearResponsePokemon(pokemonCreate);
+    return await pokemonReturnData(clearResponsePokemon(pokemonCreate));
   } else {
     const pokemonAll = await prisma.pokemon.findMany({
       select: selectDataPokemon(),
     });
-    return clearResponsePokemon(pokemonAll);
+    return await pokemonReturnData(clearResponsePokemon(pokemonAll));
   }
 };
 
@@ -45,7 +46,10 @@ const getIdPokemon = async (idPokemon) => {
     throw Error("No se pudo encontrar el pokemon que busca");
   }
 
-  return clearResponsePokemon([searchPokemonId]);
+  return {
+    ...searchPokemonId,
+    types: await pokemonType(searchPokemonId.types.map(({ idType }) => idType)),
+  };
 };
 
 const createPokemon = async (
@@ -176,11 +180,13 @@ const editPokemon = async (
     });
   });
 
-  await Promise.all(createTypePokemon);
+  const resultPromise = (await Promise.all(createTypePokemon)).map(
+    ({ idType }) => idType
+  );
 
   return {
     ...editPokemon,
-    types: existTypeResponse.map(({ idType }) => idType),
+    types: await pokemonType(resultPromise),
   };
 };
 
@@ -214,4 +220,12 @@ const deletePokemon = async (idPokemon) => {
   return pokemonDelete;
 };
 
-export { getPokemon, getIdPokemon, createPokemon, editPokemon, deletePokemon };
+export {
+  getPokemon,
+  getIdPokemon,
+  createPokemon,
+  editPokemon,
+  deletePokemon,
+  pokemonType,
+  pokemonReturnData,
+};
