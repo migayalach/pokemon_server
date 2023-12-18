@@ -24,8 +24,8 @@ const clearResponsePokemon = (arr) =>
       life,
       attack,
       defense,
-      speedtypes,
       create,
+      speed,
       types,
     }) => ({
       idPokemon,
@@ -35,7 +35,7 @@ const clearResponsePokemon = (arr) =>
       life,
       attack,
       defense,
-      speedtypes,
+      speed,
       create,
       types: types.map(({ idType }) => idType),
     })
