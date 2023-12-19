@@ -7,28 +7,47 @@ cloudinary.config({
 });
 
 const loadCharacter = async (id) => {
-  const character = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  const character = await fetch(`http://localhost:3000/server/pokemon/${id}`);
   const characterJson = await character.json();
   return characterJson;
 };
 
 const Detail = async ({ params }) => {
-  const { id, name, life, attack, defense, speed, height, weight, types } =
-    await loadCharacter(params.id);
-
+  const pokemonSearch = (await loadCharacter(params.id)).dataPokemon;
   return (
     <>
-      <h1>Detail</h1>
-      <p>{id}</p>
-      <p>Nombre: {name}</p>
-      <p>Altura: {height}</p>
-      <p>Peso: {weight}</p>
-      <p>Tipo</p>
-      <ul>
-        {types.map(({ type: { name } }, index) => (
-          <li key={index}>{name}</li>
-        ))}
-      </ul>
+      {pokemonSearch.map(
+        ({
+          idPokemon,
+          name,
+          height,
+          weight,
+          life,
+          attack,
+          defense,
+          speed,
+          create,
+          types,
+        }) => (
+          <div key={idPokemon}>
+            <h1>Detail</h1>
+            <p>Nombre: {name}</p>
+            <p>Altura: {height}</p>
+            <p>Peso: {weight}</p>
+            <p>Vida: {life}</p>
+            <p>Ataque: {attack}</p>
+            <p>Defensa: {defense}</p>
+            <p>Velocidad: {speed}</p>
+            <p>Creado: {create ? "Sí" : "No"}</p>
+            <label htmlFor="type">Tipo de pokemon</label>
+            <ul>
+              {types.map((index) => (
+                <li key={index}>{index}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      )}
     </>
   );
 };

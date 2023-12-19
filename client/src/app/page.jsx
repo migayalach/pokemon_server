@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import FormRecord from "@/componets/FormRecord/FormRecord";
+import FormRecord from "@/components/FormRecord/FormRecord";
 
 const App = () => {
   const router = useRouter();
