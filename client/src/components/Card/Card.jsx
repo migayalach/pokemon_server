@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const handleSaludo = (userId) => {
-  alert(`${userId}`);
-};
-
 const handleFavorite = (idCharacter, type) => {
   alert(`${idCharacter} - ${type}`);
 };
@@ -27,8 +23,6 @@ const Card = ({
       <button onClick={() => handleFavorite(idPokemon, "notFavorite")}>
         🤍
       </button>
-      <button onClick={() => handleSaludo(idPokemon)}>X</button>
-      {/* buscar por id en la base de datos */}
       <Link href={`/home/${idPokemon}`}>
         <p>Nombre: {name}</p>
       </Link>
