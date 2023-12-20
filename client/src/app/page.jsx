@@ -11,9 +11,9 @@ const App = () => {
 
   return (
     <>
-      <h1>Login</h1>
       <FormRecord />
-      <button onClick={() => handleRouter()}>ACEPTAR</button>
+      {/* <button onClick={() => handleRouter()}>ACEPTAR</button> */}
+      <h3>Registrar o iniciar sesion</h3>
     </>
   );
 };
