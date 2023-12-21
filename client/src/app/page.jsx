@@ -13,7 +13,7 @@ const App = () => {
     <>
       <FormRecord />
       {/* <button onClick={() => handleRouter()}>ACEPTAR</button> */}
-      <h3>Registrar o iniciar sesion</h3>
+      {/* <h3>Registrar o iniciar sesion</h3> */}
     </>
   );
 };
