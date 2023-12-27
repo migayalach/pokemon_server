@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 
 //JAVASCRIP
 import loginValidate from "@/helpers/loginValidate";
-import { data } from "autoprefixer";
 
 // STYLESHEET'S
 
