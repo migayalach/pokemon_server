@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import FormRecord from "@/components/FormRecord/FormRecord";
+import React from "react";
 
 const App = () => {
   const router = useRouter();
@@ -11,16 +12,9 @@ const App = () => {
 
   return (
     <>
-      {/* <FormRecord /> */}
-      {/* <button onClick={() => handleRouter()}>ACEPTAR</button> */}
-      {/* <h3>Registrar o iniciar sesion</h3> */}
-      <h1>100</h1>
-      <div>
-        <button>INCREMENT</button>
-      </div>
-      <div>
-        <button>DECREMENT</button>
-      </div>
+      <FormRecord />
+      <button onClick={() => handleRouter()}>ACEPTAR</button>
+      <h3>Registrar o iniciar sesion</h3>
     </>
   );
 };
