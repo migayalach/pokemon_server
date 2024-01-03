@@ -2,22 +2,19 @@
 
 // HOOK'S
 import { useState, useEffect } from "react";
-import { useLoginMutation } from "@/redux/services/loginServer";
 
 //REDUX
-import { useDispatch, useSelector } from "react-redux";
+import { useLoginMutation } from "@/redux/services/loginServer";
 
 //JAVASCRIP
 import loginValidate from "@/helpers/loginValidate";
 
 // STYLESHEET'S
 
-const Login = () => {
-  const dispatch = useDispatch();
+const Login = ({ handleRouter }) => {
   const [login, { data, error, isLoading }] = useLoginMutation();
   const [passwordView, setPasswordView] = useState(false);
-  const [optionForm, setOptionForm] = useState("login");
-  const [errors, setError] = useState({});
+  const [errors, setErrors] = useState({});
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
@@ -28,7 +25,7 @@ const Login = () => {
       ...inputData,
       [event.target.name]: event.target.value,
     });
-    setError({
+    setErrors({
       ...loginValidate({
         ...inputData,
         [event.target.name]: event.target.value,
@@ -36,24 +33,10 @@ const Login = () => {
     });
   };
 
-  const handleOptionForm = () => {
-    optionForm === "login" ? setOptionForm("Check In") : setOptionForm("login");
-  };
-
   const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      const result = await login(inputData);
-      // Manejar el resultado de la mutación si es necesario
-      console.log("Resultado de la mutación:", result.data);
-    } catch (error) {
-      // Manejar el error de la mutación
-      console.error("Error en la llamada a la API:", error);
-
-      // Puedes acceder a la información específica del error
-      console.log("Código de error:", error.code);
-
-    }
+    const result = (await login(inputData)).data;
+    handleRouter(result);
   };
 
   return (
