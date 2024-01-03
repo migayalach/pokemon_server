@@ -2,8 +2,10 @@
 
 // HOOK'S
 import { useState, useEffect } from "react";
+import { useLoginMutation } from "@/redux/services/loginServer";
 
 //REDUX
+import { useDispatch, useSelector } from "react-redux";
 
 //JAVASCRIP
 import loginValidate from "@/helpers/loginValidate";
@@ -11,9 +13,11 @@ import loginValidate from "@/helpers/loginValidate";
 // STYLESHEET'S
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const [login, { data, error, isLoading }] = useLoginMutation();
   const [passwordView, setPasswordView] = useState(false);
   const [optionForm, setOptionForm] = useState("login");
-  const [error, setError] = useState({});
+  const [errors, setError] = useState({});
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
@@ -38,21 +42,18 @@ const Login = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    // try {
-    //   const responseData = await fetch(`http://localhost:3000/server/login`, {
-    //     method: `POST`,
-    //     body: JSON.stringify(inputData),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-    //   const { access, message, data } = await responseData.json();
-    //   if (!access) {
-    //     throw Error(access);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const result = await login(inputData);
+      // Manejar el resultado de la mutación si es necesario
+      console.log("Resultado de la mutación:", result.data);
+    } catch (error) {
+      // Manejar el error de la mutación
+      console.error("Error en la llamada a la API:", error);
+
+      // Puedes acceder a la información específica del error
+      console.log("Código de error:", error.code);
+
+    }
   };
 
   return (
@@ -69,7 +70,7 @@ const Login = () => {
             placeholder="mike@gmail.com"
             className="text-black"
           />
-          {error.email && <p className="error">{error.email}</p>}
+          {errors.email && <p className="error">{errors.email}</p>}
         </div>
         <div>
           <label htmlFor="password">password</label>
@@ -82,15 +83,19 @@ const Login = () => {
             placeholder="holaMundo@1"
             className="text-black"
           />
-          {error.password && <p className="error">{error.password}</p>}
+          {errors.password && <p className="error">{errors.password}</p>}
         </div>
         <div>
           <button type="button" onClick={() => setPasswordView(!passwordView)}>
             {passwordView ? "Ocultar" : "Mostrar"} contraseña
           </button>
         </div>
-
-        <button type="submit">Login</button>
+        <button
+          className="bg-red-500 hover:bg-blue-700 transition duration-700 text-white font-bold py-2 px-4 rounded-lg w-32 h-10"
+          type="submit"
+        >
+          Login
+        </button>
       </form>
     </>
   );
