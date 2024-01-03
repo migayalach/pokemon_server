@@ -6,14 +6,13 @@ import React from "react";
 const App = () => {
   const router = useRouter();
 
-  const handleRouter = () => {
-    router.push("/home");
+  const handleRouter = (info) => {
+    info.access ? router.push("/home") : alert(info.message);
   };
 
   return (
     <>
-      <FormRecord />
-      <button onClick={() => handleRouter()}>ACEPTAR</button>
+      <FormRecord handleRouter={handleRouter} />
       <h3>Registrar o iniciar sesion</h3>
     </>
   );
