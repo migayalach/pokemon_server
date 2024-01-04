@@ -1,20 +1,16 @@
-"use client";
-import { useRouter } from "next/navigation";
-import FormRecord from "@/components/FormRecord/FormRecord";
 import React from "react";
 
 const App = () => {
-  const router = useRouter();
-
-  const handleRouter = (info) => {
-    info.access ? router.push("/home") : alert(info.message);
-  };
-
   return (
-    <>
-      <FormRecord handleRouter={handleRouter} />
-      <h3>Registrar o iniciar sesion</h3>
-    </>
+    <div className="flex items-center justify-center h-screen bg-black">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-yellow-400">
+          Bienvenido al servidor...
+        </h1>
+        <h3 className="text-yellow-400" >Curiosin :O</h3>
+      </div>
+    </div>
   );
 };
+
 export default App;
